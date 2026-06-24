@@ -48,7 +48,7 @@ import http from "http";
     //console.log(req.params)
 
 
-
+const id = req.params.id;
 
     res.json ({
         message: `user by id ${id} fetched`,
@@ -66,7 +66,7 @@ import http from "http";
 
 
  //*create 
- app.post( "/users",(req, res)=>{
+ app.post( "/users/:id",(req, res)=>{
         res.json({
         message: "user updated",
         success: "true",
@@ -83,7 +83,7 @@ import http from "http";
   
 
  //*update
- app.put ("/users", (req, res)=>{
+ app.put ("/users/:id", (req, res)=>{
 
     res.json({
         message: "user updated",
@@ -99,7 +99,7 @@ import http from "http";
 })
 
  //* Delete
- app.delete( "/users", (req, res)=>{
+ app.delete( "/users/:id", (req, res)=>{
 
     res.json({
         message: "user deleted",
