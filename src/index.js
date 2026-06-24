@@ -11,7 +11,24 @@ import http from "http";
 
  //* creating http server 
 
- const server = http.createServer(app);
+ const server = http.createServer(app); 
+
+ //* home -> get , / => <h1> HOme page </h1>
+ //? app.get (path, handler)
+
+ app.get("/", (req, res)=>{
+    res.send("<h1> HOME PAGE </h1>")
+
+ })
+
+ //* get all users
+
+ app.get ("/users", (req, res)=>{
+    res.send("<h1> all users </h1>")
+ });
+ 
+
+
  
 
  //ip -> machine/system's logical address  (198.168.1.1:1112 ) where (:11112 -> port of platform/server )
