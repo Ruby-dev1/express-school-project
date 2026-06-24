@@ -25,8 +25,8 @@ import http from "http";
  //* get all users
 
  app.get ("/users", (req, res)=>{
-
-    res.json ({
+       // res.send("<h1> all users </h1>")
+        res.json ({
         message: "all users",
         success: "true",
         data:[{
@@ -36,7 +36,32 @@ import http from "http";
 
         }]
     })
- })
+       })
+
+   //* get users by id 
+   //users/100 => {id:100}
+   //users/123 => {id:123}
+   //users/1 => {id:1}
+       //posts/:userId/:postId => /post/1/2 => {postId:2, userId:1}
+   app.get ("users/:id", (req, res)=>{
+    //req.params => {} => {id:1}
+    //console.log(req.params)
+
+
+
+
+    res.json ({
+        message: `user by id ${id} fetched`,
+        success: "true",
+        data:[{
+            _id:id,
+            name: "john Doe",
+            email: "j@gmail.com"
+
+        }]
+    })
+
+    })
     // res.send("<h1> all users </h1>")
 
 
