@@ -43,7 +43,7 @@ import http from "http";
    //users/123 => {id:123}
    //users/1 => {id:1}
        //posts/:userId/:postId => /post/1/2 => {postId:2, userId:1}
-   app.get ("users/:id", (req, res)=>{
+   app.get ("/users/:id", (req, res)=>{
     //req.params => {} => {id:1}
     //console.log(req.params)
 
@@ -66,7 +66,11 @@ const id = req.params.id;
 
 
  //*create 
- app.post( "/users/:id",(req, res)=>{
+ app.post( "/users/",(req, res)=>{
+
+
+
+
         res.json({
         message: "user updated",
         success: "true",
@@ -85,11 +89,13 @@ const id = req.params.id;
  //*update
  app.put ("/users/:id", (req, res)=>{
 
+const id = req.params.id;
+
     res.json({
         message: "user updated",
         success: "true",
         data: {
-            _id:1,
+            _id:id,
             name: "john Doe",
             email: "j@gmail.com"
 
@@ -101,11 +107,13 @@ const id = req.params.id;
  //* Delete
  app.delete( "/users/:id", (req, res)=>{
 
+const id = req.params.id;
+
     res.json({
         message: "user deleted",
         success: "true",
         data: {
-            _id:1,
+            _id:id,
             name: "john Doe",
             email: "j@gmail.com"
 
@@ -122,19 +130,80 @@ const id = req.params.id;
     res.send ("<h1> All products </h1>")
  });
 
+
+ //* get by id 
+ app.get( "product/:id", (req,res)=>{
+
+    const id = req.params.id;
+
+    res.json ({
+        message: `product by id ${id} fetched`,
+        success: "true",
+        data:[{
+           _id : id,
+            name: "mobile",
+            price : "1200"
+
+        }]
+    })
+
+    })
+
+
+ //*create
   app.post ("/product", (req, res)=>{
     // res.send ("<h1> product created </h1>")
+  
+        res.json({
+        message: " product updated",
+        success: "true",
+        data: {
+            _id:1,
+            name: "mobile ",
+            price : "30000"
+
+        }
+ });
+
+
+
     
     })
 
 
-
+//* update
  
   app.put ("/product", (req, res)=>{
-    res.send ("<h1> product updated </h1>")
+    // res.send ("<h1> product updated </h1>")
+    const id = req.params.id;
+
+        res.json({
+        message: " product created",
+        success: "true",
+        data: {
+            _id:id,
+            name: "mobile ",
+            price : "30000"
+
+        }
  });
+ });
+
+ //* delete
   app.delete ("/product", (req, res)=>{
-    res.send ("<h1> product deleted </h1>")
+    // res.send ("<h1> product deleted </h1>")
+    const id = req.params.id;
+
+        res.json({
+        message: " product deleted",
+        success: "true",
+        data: {
+            _id:id,
+            name: "mobile ",
+            price : "30000"
+
+        }
+ });
  });
 
 
