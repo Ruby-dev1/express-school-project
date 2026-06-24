@@ -21,11 +21,29 @@ import http from "http";
 
  })
 
+ //! CRUD users
  //* get all users
 
  app.get ("/users", (req, res)=>{
     res.send("<h1> all users </h1>")
  });
+
+ //*create 
+ app.post( "/users",(req, res)=>{
+    res.send("<h1> Users created </h1>")
+
+ });
+
+ //*update
+ add.put ("/users", (req, res)=>{
+    res.send ("<h1> users created </h1>")
+ });
+ //* Delete
+ add.delete( "/users", (req, res)=>{
+    res.send ("<h1> Users deleted </h1>")
+ });
+
+ 
  
 
 
