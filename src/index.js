@@ -25,26 +25,92 @@ import http from "http";
  //* get all users
 
  app.get ("/users", (req, res)=>{
-    res.send("<h1> all users </h1>")
- });
+
+    res.json ({
+        message: "all users",
+        success: "true",
+        data:[{
+            _id:1,
+            name: "john Doe",
+            email: "j@gmail.com"
+
+        }]
+    })
+ })
+    // res.send("<h1> all users </h1>")
+
 
  //*create 
  app.post( "/users",(req, res)=>{
-    res.send("<h1> Users created </h1>")
+        res.json({
+        message: "user updated",
+        success: "true",
+        data: {
+            _id:1,
+            name: "john Doe",
+            email: "j@gmail.com"
 
+        }
  });
+
+ })
+    // res.send("<h1> Users created </h1>")
+  
 
  //*update
- add.put ("/users", (req, res)=>{
-    res.send ("<h1> users created </h1>")
+ app.put ("/users", (req, res)=>{
+
+    res.json({
+        message: "user updated",
+        success: "true",
+        data: {
+            _id:1,
+            name: "john Doe",
+            email: "j@gmail.com"
+
+        }
  });
+    // res.send ("<h1> users created </h1>")
+})
+
  //* Delete
- add.delete( "/users", (req, res)=>{
-    res.send ("<h1> Users deleted </h1>")
+ app.delete( "/users", (req, res)=>{
+
+    res.json({
+        message: "user deleted",
+        success: "true",
+        data: {
+            _id:1,
+            name: "john Doe",
+            email: "j@gmail.com"
+
+        }
+ });
+    // res.send ("<h1> Users deleted </h1>")
  });
 
+ //! crud products 
  
  
+
+ app.get ("/product", (req, res)=>{
+    res.send ("<h1> All products </h1>")
+ });
+
+  app.post ("/product", (req, res)=>{
+    // res.send ("<h1> product created </h1>")
+    
+    })
+
+
+
+ 
+  app.put ("/product", (req, res)=>{
+    res.send ("<h1> product updated </h1>")
+ });
+  app.delete ("/product", (req, res)=>{
+    res.send ("<h1> product deleted </h1>")
+ });
 
 
  
