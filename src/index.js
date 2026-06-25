@@ -2,6 +2,15 @@
 //? express js -> backend framework for node  --> handle errors by own , and if error comes then it gives default error
  // get /users -> handler
  // post / users -> handler 
+ 
+
+ // http://localhost8080/users/1?       //where ? -> query parameter and / dekhi paxadi ko route
+  //http://localhost8080/users?name=john&page=1&limit=10
+
+ // req.params -> {}
+ // req.query -> {} --> used in filter, search {name:"john",page:"1",limit:"10"}
+ // req.body -> {}
+ //post /users =>  req.body
 //* fast, unopiniated minimalist web framework for node .js
 import http from "http";
  import express from "express";
@@ -12,6 +21,10 @@ import http from "http";
  //* creating http server 
 
  const server = http.createServer(app); 
+ app.use(express.json()) // parse the string and attached on current req.body
+
+ const users = [];
+ const products = [];
 
  //* home -> get , / => <h1> HOme page </h1>
  //? app.get (path, handler)
@@ -26,17 +39,14 @@ import http from "http";
 
  app.get ("/users", (req, res)=>{
        // res.send("<h1> all users </h1>")
+       const query = req.query;
+       console.log(query);
         res.json ({
         message: "all users",
         success: "true",
-        data:[{
-            _id:1,
-            name: "john Doe",
-            email: "j@gmail.com"
-
-        }]
-    })
+        data: users,
        })
+    })
 
    //* get users by id 
    //users/100 => {id:100}
@@ -46,9 +56,21 @@ import http from "http";
    app.get ("/users/:id", (req, res)=>{
     //req.params => {} => {id:1}
     //console.log(req.params)
+    const {id} = req.params;
+    const user = users.find((user)=> user._id=== Number(id))
+
+    if(!user){
+        res.json({
+            message:"users not found",
+            success: false,
+            data: null
+        });
+        return
+
+    }
 
 
-const id = req.params.id;
+// const id = req.params.id;
 
     res.json ({
         message: `user by id ${id} fetched`,
@@ -69,17 +91,20 @@ const id = req.params.id;
  app.post( "/users/",(req, res)=>{
 
 
-
+    // console.log(req.body);
+    const {name, email, password} = req.body;
+    users.push({
+        name,
+        email,
+        password,
+        createdAt: Date.now(),
+        _id:users.length +1 ,
+    });
 
         res.json({
         message: "user updated",
         success: "true",
-        data: {
-            _id:1,
-            name: "john Doe",
-            email: "j@gmail.com"
-
-        }
+        data: users[users.length -1],
  });
 
  })
@@ -89,17 +114,33 @@ const id = req.params.id;
  //*update
  app.put ("/users/:id", (req, res)=>{
 
-const id = req.params.id;
+// const id = req.params.id;
+const {id} = req.params;
+const {name, email, password} = req.body;
+const index = users.findIndex((user)=> user._id === Number(id));
+
+if(index=== -1){
+    res.json({
+        message: "user not found",
+        success: false,
+        data: null,
+    });
+    return ;
+
+    users[index]={
+        ...users[index],
+        name,
+        email,
+        password,
+    };
+}
 
     res.json({
         message: "user updated",
         success: "true",
-        data: {
-            _id:id,
-            name: "john Doe",
-            email: "j@gmail.com"
-
-        }
+        data: users[index],
+            
+        
  });
     // res.send ("<h1> users created </h1>")
 })
@@ -107,34 +148,71 @@ const id = req.params.id;
  //* Delete
  app.delete( "/users/:id", (req, res)=>{
 
-const id = req.params.id;
+// const id = req.params.id;
+const {id} = req.params;
+const index = users.find((user)=> user._id === Number(id));
 
+if(index === -1){
+    res.json({
+        message: "user not found",
+        scucess: false,
+        data: null,
+    });
+    return;
+}
+    users.splice(index,1);
     res.json({
         message: "user deleted",
-        success: "true",
-        data: {
-            _id:id,
-            name: "john Doe",
-            email: "j@gmail.com"
+        success: true,
+        data: null,
+    });
+});
 
-        }
- });
-    // res.send ("<h1> Users deleted </h1>")
- });
+//     res.json({
+//         message: "user deleted",
+//         success: "true",
+//         data: {
+//             _id:id,
+//             name: "john Doe",
+//             email: "j@gmail.com"
+
+//         }
+//  });
+//     // res.send ("<h1> Users deleted </h1>")
+//  });
 
  //! crud products 
- 
+ //* get all products
+
  
 
- app.get ("/product", (req, res)=>{
-    res.send ("<h1> All products </h1>")
+ app.get ("/products", (req, res)=>{
+     const query = req.query;
+       console.log(query);
+        res.json ({
+        message: "all products",
+        success: "true",
+        data: products,
+       })
+    
  });
 
 
  //* get by id 
- app.get( "product/:id", (req,res)=>{
+ app.get( "/products/:id", (req,res)=>{
 
-    const id = req.params.id;
+    // const id = req.params.id;
+    const {id} = req.params;
+    const product = products.find((product)=> product._id === Number(id))
+
+    if(!product){
+        res.json({
+            message:"product not found",
+            success: false,
+            data: null,
+        });
+        return;
+    }
 
     res.json ({
         message: `product by id ${id} fetched`,
@@ -151,18 +229,22 @@ const id = req.params.id;
 
 
  //*create
-  app.post ("/product", (req, res)=>{
+  app.post ("/products", (req, res)=>{
     // res.send ("<h1> product created </h1>")
+    const {name, price} = req.body;
+    products.push({
+        name,
+        price,
+        
+        createdAt: new Date (Date.now()),
+        _id:products.length +1 ,
+    });
+
   
         res.json({
         message: " product updated",
         success: "true",
-        data: {
-            _id:1,
-            name: "mobile ",
-            price : "30000"
-
-        }
+        data: products[products.id -1]
  });
 
 
@@ -173,9 +255,28 @@ const id = req.params.id;
 
 //* update
  
-  app.put ("/product", (req, res)=>{
+  app.put ("/products/:id", (req, res)=>{
     // res.send ("<h1> product updated </h1>")
-    const id = req.params.id;
+    // const id = req.params.id;
+    const {id} = req.body;
+    const {name, price} = req.body;
+    const index = products.findIndex((product) => product._id);
+
+    if(index === -1){
+        res.json({
+            message: "product not found",
+            success: false,
+            data: null,
+        })
+        return; 
+    }
+    products[index]={
+        ...products[index],
+        name,
+        price,
+    };
+
+
 
         res.json({
         message: " product created",
@@ -190,7 +291,7 @@ const id = req.params.id;
  });
 
  //* delete
-  app.delete ("/product", (req, res)=>{
+  app.delete ("/products/:id", (req, res)=>{
     // res.send ("<h1> product deleted </h1>")
     const id = req.params.id;
 

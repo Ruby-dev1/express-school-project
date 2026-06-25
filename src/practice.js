@@ -6,7 +6,7 @@
  const server = http.createServer(app);
 
  app.get("/",(req,res)=>{
-    app.send("<h1> SCHOOL--HOME PAGE")
+    res.send("<h1> SCHOOL--HOME PAGE")
  })
 
  //!CRUD STUDENTS 
