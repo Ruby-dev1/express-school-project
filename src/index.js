@@ -14,6 +14,8 @@
 //* fast, unopiniated minimalist web framework for node .js
 import http from "http";
  import express from "express";
+ import userRoutes from "./routes/user.routes.js"
+ import productRoutes from "./routes/product.routes.js"
 
  //* creating express app instance 
  const app = express();
@@ -23,151 +25,21 @@ import http from "http";
  const server = http.createServer(app); 
  app.use(express.json()) // parse the string and attached on current req.body
 
- const users = [];
- const products = [];
+
+
 
  //* home -> get , / => <h1> HOme page </h1>
  //? app.get (path, handler)
 
  app.get("/", (req, res)=>{
-    res.send("<h1> HOME PAGE </h1>")
+    // res.send("<h1> HOME PAGE </h1>")
+    res.status(200).json({
+        message: "server is up & running"
+    });
 
  })
 
- //! CRUD users
- //* get all users
-
- app.get ("/users", (req, res)=>{
-       // res.send("<h1> all users </h1>")
-       const query = req.query;
-       console.log(query);
-        res.json ({
-        message: "all users",
-        success: "true",
-        data: users,
-       })
-    })
-
-   //* get users by id 
-   //users/100 => {id:100}
-   //users/123 => {id:123}
-   //users/1 => {id:1}
-       //posts/:userId/:postId => /post/1/2 => {postId:2, userId:1}
-   app.get ("/users/:id", (req, res)=>{
-    //req.params => {} => {id:1}
-    //console.log(req.params)
-    const {id} = req.params;
-    const user = users.find((user)=> user._id=== Number(id))
-
-    if(!user){
-        res.json({
-            message:"users not found",
-            success: false,
-            data: null
-        });
-        return
-
-    }
-
-
-// const id = req.params.id;
-
-    res.json ({
-        message: `user by id ${id} fetched`,
-        success: "true",
-        data:[{
-            _id:id,
-            name: "john Doe",
-            email: "j@gmail.com"
-
-        }]
-    })
-
-    })
-    // res.send("<h1> all users </h1>")
-
-
- //*create 
- app.post( "/users/",(req, res)=>{
-
-
-    // console.log(req.body);
-    const {name, email, password} = req.body;
-    users.push({
-        name,
-        email,
-        password,
-        createdAt: Date.now(),
-        _id:users.length +1 ,
-    });
-
-        res.json({
-        message: "user updated",
-        success: "true",
-        data: users[users.length -1],
- });
-
- })
-    // res.send("<h1> Users created </h1>")
-  
-
- //*update
- app.put ("/users/:id", (req, res)=>{
-
-// const id = req.params.id;
-const {id} = req.params;
-const {name, email, password} = req.body;
-const index = users.findIndex((user)=> user._id === Number(id));
-
-if(index=== -1){
-    res.json({
-        message: "user not found",
-        success: false,
-        data: null,
-    });
-    return ;
-
-    users[index]={
-        ...users[index],
-        name,
-        email,
-        password,
-    };
-}
-
-    res.json({
-        message: "user updated",
-        success: "true",
-        data: users[index],
-            
-        
- });
-    // res.send ("<h1> users created </h1>")
-})
-
- //* Delete
- app.delete( "/users/:id", (req, res)=>{
-
-// const id = req.params.id;
-const {id} = req.params;
-const index = users.find((user)=> user._id === Number(id));
-
-if(index === -1){
-    res.json({
-        message: "user not found",
-        scucess: false,
-        data: null,
-    });
-    return;
-}
-    users.splice(index,1);
-    res.json({
-        message: "user deleted",
-        success: true,
-        data: null,
-    });
-});
-
+ 
 //     res.json({
 //         message: "user deleted",
 //         success: "true",
@@ -180,134 +52,11 @@ if(index === -1){
 //  });
 //     // res.send ("<h1> Users deleted </h1>")
 //  });
+//! using routes
+ app.use("/users", userRoutes);
+ app.use("/products", productRoutes);
 
  //! crud products 
- //* get all products
-
- 
-
- app.get ("/products", (req, res)=>{
-     const query = req.query;
-       console.log(query);
-        res.json ({
-        message: "all products",
-        success: "true",
-        data: products,
-       })
-    
- });
-
-
- //* get by id 
- app.get( "/products/:id", (req,res)=>{
-
-    // const id = req.params.id;
-    const {id} = req.params;
-    const product = products.find((product)=> product._id === Number(id))
-
-    if(!product){
-        res.json({
-            message:"product not found",
-            success: false,
-            data: null,
-        });
-        return;
-    }
-
-    res.json ({
-        message: `product by id ${id} fetched`,
-        success: "true",
-        data:[{
-           _id : id,
-            name: "mobile",
-            price : "1200"
-
-        }]
-    })
-
-    })
-
-
- //*create
-  app.post ("/products", (req, res)=>{
-    // res.send ("<h1> product created </h1>")
-    const {name, price} = req.body;
-    products.push({
-        name,
-        price,
-        
-        createdAt: new Date (Date.now()),
-        _id:products.length +1 ,
-    });
-
-  
-        res.json({
-        message: " product updated",
-        success: "true",
-        data: products[products.id -1]
- });
-
-
-
-    
-    })
-
-
-//* update
- 
-  app.put ("/products/:id", (req, res)=>{
-    // res.send ("<h1> product updated </h1>")
-    // const id = req.params.id;
-    const {id} = req.body;
-    const {name, price} = req.body;
-    const index = products.findIndex((product) => product._id);
-
-    if(index === -1){
-        res.json({
-            message: "product not found",
-            success: false,
-            data: null,
-        })
-        return; 
-    }
-    products[index]={
-        ...products[index],
-        name,
-        price,
-    };
-
-
-
-        res.json({
-        message: " product created",
-        success: "true",
-        data: {
-            _id:id,
-            name: "mobile ",
-            price : "30000"
-
-        }
- });
- });
-
- //* delete
-  app.delete ("/products/:id", (req, res)=>{
-    // res.send ("<h1> product deleted </h1>")
-    const id = req.params.id;
-
-        res.json({
-        message: " product deleted",
-        success: "true",
-        data: {
-            _id:id,
-            name: "mobile ",
-            price : "30000"
-
-        }
- });
- });
-
-
  
 
  //ip -> machine/system's logical address  (198.168.1.1:1112 ) where (:11112 -> port of platform/server )
@@ -318,3 +67,57 @@ if(index === -1){
     console.log(`server is running at http://localhost:8080`)
     console.log("press ctrl+c to close the server");
  })
+
+
+ //* Rest api
+
+ //? REST -> Representational state transfer
+//? api ->  application programming interface
+
+
+//* stateless - request should not managed by server --> request send information (autorized token ) should come along request
+//* client-server architecture -> client and server should be diff
+//* layered architecture
+
+// client - cdn, proxy , loadbalancer ... -server
+
+//* cacheable response -> 
+// cache-control 
+
+
+//! Rules;  
+// * uniform interface
+//? route naming
+//? use noun 
+// get /users
+// post / users
+//? use meaningful http methods => GET, POST , PUT, PATCH , DELETE
+//? use meaningful response status code ->
+//! 100 -199 -> informational 
+//! 200-299 -> success ,
+// 200 -> ok , 201 -> created
+//! 300 - 399 -> redirectional
+//! 400 - 499 -> client side error , , 404 
+// 400 -> bad request
+// 401 -> unauthorized
+// 403 -> forbidden
+// 404 -> NOT FOUND
+//! 500- 599 -> server side error, 
+// 500 -> internal server error  ,
+//  502 -> bad gateway
+//* Note - lool this at http response status code Mmdn
+
+
+//! endpoint 
+//*  get /users
+//* get /users/1
+
+//! resource
+
+// /dashboard => {}
+    // users => json, html, xml
+    
+
+
+
+

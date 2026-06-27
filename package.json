@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": " node --watch ./src/index.js"
-    
+    "dev": " node --watch ./src/index.js" ,
+    "start1": "node ./src/practice.js",
+    "dev1" : "node --watch ./src/practice.js"
+
   },
   "keywords": [],
   "author": "",
