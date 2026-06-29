@@ -37,7 +37,7 @@ export const getall = (req,res)=>{
  export const create = (req, res)=>{
     const {name, email,password}= req.body
     
-    products.push({
+    users.push({
         name,
         email,
         password,
@@ -56,7 +56,7 @@ export const getall = (req,res)=>{
 
  export const update = (req, res)=>{
     const {id} = req.params
-    const {name, price}= req.body;
+    const {name, email,password}= req.body;
     const Index = users.findIndex((user)=>user.id===Number(id))
     if(Index===-1){
         res.status(400).json({
@@ -94,7 +94,7 @@ export const getall = (req,res)=>{
         return 
     }
 
-    products.splice(Index,1);
+    users.splice(Index,1);
     res.status(200).json({
         message:`user by id ${id} is deleted`,
         success: true
