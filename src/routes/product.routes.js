@@ -3,9 +3,14 @@
  const router = express.Router();
 import { getall, getbyId, create, update, remove} from "../controllers/product.controller.js"
 
+const mid = (req,res,next)=>{
+    console.log("get all products mid");
+    next()
+};
+
 //* get all products
 
- router.get ("/", getall)
+ router.get ("/", mid , mid ,getall)
 
  //* get by id 
 

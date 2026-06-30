@@ -5,6 +5,8 @@ const products = []
 export const getall = (req,res)=>{
     const query = req.query
     console.log(query);
+    console.log("get all products");
+    console.log(req.user)
     res.status(200).json({
         message:"all products",
         success:true,

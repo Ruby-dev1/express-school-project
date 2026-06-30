@@ -5,16 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js",
-    "dev": " node --watch ./src/index.js" ,
-    "start1": "node ./src/practice.js",
-    "dev1" : "node --watch ./src/practice.js"
-
+    "dev": " node --watch ./src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "module": "^2.0.0"
   }
 }

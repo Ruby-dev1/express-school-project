@@ -1,5 +1,5 @@
 import express from "express"
- const router = express.Router();
+const router = express.Router();
 import { getall, getbyId, create, update, remove} from "../controllers/category.controller.js"
 
 //* get all products
