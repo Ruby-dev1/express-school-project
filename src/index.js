@@ -114,8 +114,8 @@ app.use((req,res,next)=>{
  app.use((err, req, res, next)=>{ // to define error handler four argument to be passed is compulsory
    console.log("error handler");
    console.log(err)
-   res.status(500).json({
-      message: "something went wrong",
+   res.status(err?.statusCode ?? 500).json({
+      message: err?.message ?? "something went wrong",
       success:false,
       data:null,
 

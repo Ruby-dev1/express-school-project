@@ -13,15 +13,23 @@ export const getall = (req,res)=>{
 }
 
 //* get user by id
- export const getbyId = (req,res)=>{
+ export const getbyId = (req,res,next)=>{
     const {id} = req.params
-    const user = users.findIndex((user)=>user.id===Number(id))
+    const user = users.find((user)=>user.id===Number(id))
     if(!user){
-        res.status(400).json({
+        // res.status(400).json({
+        //     message: "user not found",
+        //     success: false,
+        //     data: null
+
+        next({
             message: "user not found",
-            success: false,
-            data: null
+            statusCode: 404,
+
         });
+
+
+    
         return 
     }
     res.status(200).json({
