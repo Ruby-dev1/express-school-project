@@ -52,15 +52,18 @@ app.use((req,res,next)=>{
     //next();
 
    if(req.user){
-      next()
+      next();
+     // next(123) // if some argument like 1, 123, anything pass to the next() it directly call error handler
    } else {
-      res.status(400).json({
+      res.status(401).json({
          message: "unauthorized. Access denied",
       });
    }
    
 
 });
+
+
 
 
  app.use(express.json()) // parse the string and attached on current req.body
@@ -106,7 +109,20 @@ app.use((req,res,next)=>{
     // localhost ip address  -> 127.0.0.1 ( address of local server) 
     console.log(`server is running at http://localhost:8080`)
     console.log("press ctrl+c to close the server");
- })
+ });
+
+ app.use((err, req, res, next)=>{ // to define error handler four argument to be passed is compulsory
+   console.log("error handler");
+   console.log(err)
+   res.status(500).json({
+      message: "something went wrong",
+      success:false,
+      data:null,
+
+   })
+     
+   
+});
 
 
  //* Rest api
@@ -174,7 +190,8 @@ app.use((req,res,next)=>{
 //* local /custom mid 
 //? 1.application level middleware 
 //? 2. route level middleware -- get ,post, put , delete ( middleware handling)
-//? 3. error handle middleware -error handling in global level
+
+//? 3. error handle middleware -error handling in global level: (err, req, res,next)=>{ }
 
 
 // req -> mid -> mid1 -> mid2 -> midN -> controller.       after the midN phase come after next() , then it call to routing and hence controller
