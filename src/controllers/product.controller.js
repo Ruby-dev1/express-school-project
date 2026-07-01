@@ -15,24 +15,32 @@ export const getall = (req,res)=>{
 }
 
 //* get product by id
- export const getbyId = (req,res)=>{
+ export const getbyId = (req,res,next)=>{
     const {id} = req.params
-    const product = products.findIndex((product)=>product.id===Number(id))
+    const product = products.find((product)=>product.id===Number(id))
     if(!product){
-        res.status(400).json({
-            message: "product not found",
-            success: false,
-            data: null
-        });
-        return 
-    }
+        // res.status(400).json({
+        //     message: "product not found",
+        //     success: false,
+        //     data: null
+        next({
+            message:"product not found",
+            statusCode: 404
+
+        })
+     return 
+
+        };
+   
+   
     res.status(200).json({
         message:`product by id ${id} is fetched`,
         success: true,
         data: product
     })
+}
 
- }
+
 
  //* create product
 

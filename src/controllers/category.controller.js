@@ -15,15 +15,15 @@ export const getall = (req,res)=>{
 
 //* get category by id
 
- export const getbyId = (req,res)=>{
+ export const getbyId = (req,res,next)=>{
     const {id} = req.params
-    const category = categories.findIndex((category)=>category.id===Number(id))
+    const category = categories.find((category)=>category.id===Number(id))
     if(!category){
-        res.status(400).json({
-            message: "category not found",
-            success: false,
-            data: null
-        });
+        // 
+        next({
+            message:"category not found",
+            statusCode: 404
+        })
         return 
     }
     res.status(200).json({
