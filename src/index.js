@@ -17,6 +17,7 @@
  import userRoutes from "./routes/user.routes.js"
  import productRoutes from "./routes/product.routes.js"
  import categoryRoutes from "./routes/category.routes.js"
+ import {connectDatabase} from "./config/db.config.js"
 
  //* creating express app instance 
  const app = express();
@@ -24,6 +25,9 @@
  //* creating http server 
 
  const server = http.createServer(app); 
+
+ //* connect database
+ connectDatabase();
 
  const middleware = (req,res,next)=>{
    console.log("middleware 1");
@@ -199,5 +203,24 @@ app.use((req,res,next)=>{
 //should be in consecutive order call 
 
 //*  third party middlewate- e.g. multer -uses case for file upload
+
+
+//* Mongodb -
+//Nosql - no fixed structure
+
+//? sql       //? no sql
+// database ->  database
+// table ->     collections  
+// colum  ->    field
+//row ->        document
+
+
+
+
+// *  typeorm (using typescript backend)
+//* prism orm  - sql that doesn't support typescript
+//* sqlbolt - sql practices ( query solve)
+
+
 
 

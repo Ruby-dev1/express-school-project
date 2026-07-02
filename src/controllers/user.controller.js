@@ -1,21 +1,58 @@
+import mongoose from "mongoose"
 const users = []
+
+//!  user schema 
+
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        minLength: 3,
+
+    },
+    email:{
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type:String,
+        required:true,
+    },
+},{timestamps:true}
+);
+
+//! creating user model
+
+const User = mongoose.model("user",userSchema);
+
 
 //* get all users
 
-export const getall = (req,res)=>{
+export const getall = async(req,res)=>{
+    try{
     const query = req.query
     console.log(query);
+//* database find all query
+    const users = await User.find({})
     res.status(200).json({
         message: "all users",
         success: true,
         data: users
     })
 }
+catch(error){
+    next(error);
+}
+};
 
 //* get user by id
- export const getbyId = (req,res,next)=>{
+ export const getbyId = async(req,res,next)=>{
+
+    try{
     const {id} = req.params
-    const user = users.find((user)=>user.id===Number(id))
+    // const user = users.find((user)=>user.id===Number(id))
+    const user = await User.findOne({id: id}); //_id:id 
     if(!user){
         // res.status(400).json({
         //     message: "user not found",
@@ -37,13 +74,17 @@ export const getall = (req,res)=>{
         success: true,
         data: user
     })
-
- }
+    }
+    catch(error){
+        next(error);
+    }
+ };
 
  //* create user
 
  export const create = (req, res)=>{
     const {name, email,password}= req.body
+    //await.User
     
     users.push({
         name,
@@ -66,6 +107,8 @@ export const getall = (req,res)=>{
     const {id} = req.params
     const {name, email,password}= req.body;
     const Index = users.findIndex((user)=>user.id===Number(id))
+
+    //User.findByIdAndUpdate({id:id},{name,email,password,{new:true}})
     if(Index===-1){
         res.status(400).json({
             message: "user not found",
