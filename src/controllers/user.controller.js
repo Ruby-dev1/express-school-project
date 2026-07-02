@@ -29,7 +29,7 @@ const User = mongoose.model("user",userSchema);
 
 //* get all users
 
-export const getall = async(req,res)=>{
+export const getall = async(req,res,next)=>{
     try{
     const query = req.query
     console.log(query);
@@ -82,72 +82,82 @@ catch(error){
 
  //* create user
 
- export const create = (req, res)=>{
-    const {name, email,password}= req.body
-    //await.User
-    
-    users.push({
-        name,
-        email,
-        password,
-        createdAt: Date.now(),
-        id: users.length+1
-    });
+export const create = async (req, res, next) => {
+    try {
+        const { name, email, password } = req.body;
 
-    res.status(201).json({
-        message: "user is created",
-        success: true,
-        data: users[users.length-1]
-    })
- }
+        const user = await User.create({
+            name,
+            email,
+            password
+        });
 
+        res.status(201).json({
+            message: "User created successfully",
+            success: true,
+            data: user
+        });
+
+    } catch (error) {
+        next(error);
+    }
+};
  //* update user by id
 
- export const update = (req, res)=>{
-    const {id} = req.params
-    const {name, email,password}= req.body;
-    const Index = users.findIndex((user)=>user.id===Number(id))
+ export const update = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const { name, email, password } = req.body;
 
-    //User.findByIdAndUpdate({id:id},{name,email,password,{new:true}})
-    if(Index===-1){
-        res.status(400).json({
-            message: "user not found",
-            success: false,
-            data: null
+        const user = await User.findByIdAndUpdate(
+            id,
+            {
+                name,
+                email,
+                password
+            },
+            {
+                new: true
+            }
+        );
+
+        if (!user) {
+            return next({
+                message: "User not found",
+                statusCode: 404
+            });
+        }
+
+        res.status(200).json({
+            message: "User updated successfully",
+            success: true,
+            data: user
         });
-        return 
-    }
 
-    users[index]={
-        ...users[index],
-        name,
-        email,
-        password,
+    } catch (error) {
+        next(error);
     }
-    res.status(200).json({
-        message: `user by id ${id} is updated`,
-        success:true,
-        data: users[index]
-    })
- }
-
+};
  //* delete product by id
 
- export const remove = (req,res)=>{
+ export const remove =async  (req,res,next)=>{
+    try{
     const {id} = req.params
-    const Index = users.findIndex((user)=>user.id)===Number(id)
-    if(Index ===-1){
-        res.status(400).json({
+    const user = await delete User.findByIdAndDelete(id);
+    if(!user){
+        return next({
             message: "user not found",
-            success: false,
-            data: null
-        });
-        return 
-    }
+            statusCode: 404,
 
-    users.splice(Index,1);
+        });
+    }
     res.status(200).json({
-        message:`user by id ${id} is deleted`,
-        success: true
-    })
+        message: "user deleted successfully",
+        success: true,
+        data: user,
+
+    }); 
+ } catch (error){
+    next(error);
  }
+};
