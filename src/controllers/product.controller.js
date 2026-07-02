@@ -134,7 +134,7 @@ export const getall = async(req,res,next)=>{
 
  //* delete product by id
 
- export const remove = (req,res)=>{
+ export const remove =  async  (req,res,next)=>{
     try{
     const {id} = req.params
    const product = await delete  Product.findByIdAndDelete(id);

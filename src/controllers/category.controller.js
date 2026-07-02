@@ -23,26 +23,35 @@ const categorySchema = new mongoose.Schema({
 
 //! creating category model
 
-const category = mongoose.model("category", categorySchema);
+const Category = mongoose.model("category", categorySchema);
 
 //* get all categories
 
 
-export const getall = (req,res)=>{
+export const getall = async(req,res, next)=>{
+    try{
     const query = req.query
     console.log(query);
+//* database find all query
+const categories = await  Category.find({})
+
     res.status(200).json({
         message:"all categories",
         success:true,
         data:categories
     })
 }
+catch(error){
+    next(error);
+}
+};
 
 //* get category by id
 
- export const getbyId = (req,res,next)=>{
+ export const getbyId = async(req,res,next)=>{
+    try{
     const {id} = req.params
-    const category = categories.find((category)=>category.id===Number(id))
+    const category = await Category.findOne({id:id});
     if(!category){
         // 
         next({
@@ -58,70 +67,91 @@ export const getall = (req,res)=>{
     })
 
  }
+ catch(error){
+    next(error);
+ }
+};
 
  //* create category
 
- export const create = (req, res)=>{
+ export const create = async (req, res,next)=>{
+    try{
     const {name,Brand}= req.body
     
-    categories.push({
+   const category = await Category.create({
         name,
         Brand,
-        createdAt: Date.now(),
-        id: categories.length+1
+       
     });
 
     res.status(201).json({
         message: "category is created",
         success: true,
-        data: categories[categories.length-1]
-    })
+        data: category
+    });
  }
+ catch(error){
+    next(error);
+ }
+};
 
  //* update category by id
 
- export const update = (req, res)=>{
+ export const update = async(req, res,next)=>{
+    try{
     const {id} = req.params
     const {name, Brand}= req.body;
-    const Index = categories.findIndex((category)=>category.id===Number(id))
-    if(Index===-1){
-        res.status(400).json({
-            message: "category not found",
-            success: false,
-            data: null
-        });
-        return 
-    }
-
-    categories[index]={
-        ...categories[index],
+   const category = await Category.findByIdAndUpdate(
+    id,{
         name,
         Brand,
+    
+    },
+    {
+        new: true
     }
+
+   );
+    if(!category){
+         return next({
+            message: "category not found",
+            statusCode: 404
+        });
+      
+    }
+
+ 
     res.status(200).json({
         message: `category by id ${id} is updated`,
         success:true,
-        data: categories[index]
+        data: category
     })
  }
+ catch(error){
+    next(error);
+ }
+};
 
  //* delete category by id
 
- export const remove = (req,res)=>{
+ export const remove = async(req,res,next)=>{
+    try{
     const {id} = req.params
-    const Index = categories.findIndex((category)=>category.id)===Number(id)
-    if(Index ===-1){
-        res.status(400).json({
+   const category = await delete Category.findByIdAndDelete(id)
+    if(!category){
+        return next({
             message: "category not found",
-            success: false,
-            data: null
+            statusCode: 404,
         });
-        return 
-    }
-
-    categories.splice(Index,1);
+    }     
+  
     res.status(200).json({
-        message:`category by id ${id} is deleted`,
-        success: true
+        message: "category deleted successfully",
+        success: true,
+        data: category,
     })
  }
+ catch(error){
+    next(error);
+ }
+};
