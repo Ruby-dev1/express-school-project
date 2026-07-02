@@ -1,4 +1,29 @@
+import mongoose from "mongoose"
+
 const categories = []
+
+
+//! category schema
+
+const categorySchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required: true,
+        minLength : 3
+    },
+    Brand: {
+        type: String,
+        required : true,
+
+
+
+    }
+
+})
+
+//! creating category model
+
+const category = mongoose.model("category", categorySchema);
 
 //* get all categories
 
