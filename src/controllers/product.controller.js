@@ -1,5 +1,25 @@
+import mongoose from "mongoose"
 const products = []
 
+
+//! product schema
+
+const productSchema = new mongoose.Schema({
+    name:{
+        type:String,
+        required: true,
+
+    },
+    price:{
+        type:Number,
+        required : true,
+
+    }
+})
+
+//! creating product model 
+
+const Product = mongoose.model("product", productSchema);
 //* get all products
 
 export const getall = (req,res)=>{
