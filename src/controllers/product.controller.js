@@ -22,22 +22,31 @@ const productSchema = new mongoose.Schema({
 const Product = mongoose.model("product", productSchema);
 //* get all products
 
-export const getall = (req,res)=>{
+export const getall = async(req,res,next)=>{
+    try{
     const query = req.query
     console.log(query);
+
+    //* database find all query
+    const products = await Product.find({})
     console.log("get all products");
-    console.log(req.user)
+
     res.status(200).json({
         message:"all products",
         success:true,
         data:products
     })
+} catch(error){
+    next(error);
 }
-
+};
 //* get product by id
- export const getbyId = (req,res,next)=>{
+ export const getbyId = async (req,res,next)=>{
+    try{
     const {id} = req.params
-    const product = products.find((product)=>product.id===Number(id))
+    // const product = products.find((product)=>product.id===Number(id))
+    const product = await Product.findOne({id:id});
+
     if(!product){
         // res.status(400).json({
         //     message: "product not found",
@@ -48,9 +57,9 @@ export const getall = (req,res)=>{
             statusCode: 404
 
         })
-     return 
+     return
 
-        };
+        }
    
    
     res.status(200).json({
@@ -59,72 +68,87 @@ export const getall = (req,res)=>{
         data: product
     })
 }
+    catch(error){
+        next(error);
+    }
+};
 
 
 
  //* create product
 
- export const create = (req, res)=>{
+ export const create = async(req, res,next)=>{
+    try{
     const {name, price}= req.body
     
-    products.push({
+    const product = await Product.create({
         name,
         price,
-        createdAt: Date.now(),
-        id: products.length+1
+       
     });
 
     res.status(201).json({
         message: "product is created",
         success: true,
-        data: products[products.length-1]
+        data: product
     })
  }
-
+ catch(error){
+    next(error);
+ }
+ };
  //* update product by id
 
- export const update = (req, res)=>{
+ export const update = async (req, res,next)=>{
+    try{
     const {id} = req.params
     const {name, price}= req.body;
-    const Index = products.findIndex((product)=>product.id===Number(id))
-    if(Index===-1){
-        res.status(400).json({
+    const product = await Product.findByIdAndUpdate(
+        id,
+        {
+            name,
+            price,
+        },
+        {
+            new : true
+        }
+    );
+    // const Index = products.findIndex((product)=>product.id===Number(id))
+     if(!product){
+        return next({
             message: "product not found",
-            success: false,
-            data: null
-        });
-        return 
+            statusCode: 404
+        })
     }
 
-    products[index]={
-        ...products[index],
-        name,
-        price
-    }
+   
     res.status(200).json({
         message: `product by id ${id} is updated`,
         success:true,
-        data: products[index]
+        data: product
     })
+ } catch(error){
+    next(error);
  }
+};
 
  //* delete product by id
 
  export const remove = (req,res)=>{
+    try{
     const {id} = req.params
-    const Index = products.findIndex((product)=>product.id)===Number(id)
-    if(Index ===-1){
-        res.status(400).json({
+   const product = await delete  Product.findByIdAndDelete(id);
+    if(!product){
+        return next({
             message: "product not found",
-            success: false,
-            data: null
-        });
-        return 
+            statusCode: 404
+        })
+        }
+        
+    }
+    catch(error){
+        next(error);
     }
 
-    products.splice(Index,1);
-    res.status(200).json({
-        message:`product by id ${id} is deleted`,
-        success: true
-    })
- }
+   
+ };
